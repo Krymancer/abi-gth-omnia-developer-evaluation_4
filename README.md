@@ -84,3 +84,16 @@ This section includes links to the detailed documentation for the different API 
 This section describes the overall structure and organization of the project files and directories. 
 
 See [Project Structure](/.doc/project-structure.md)
+
+
+## Instructions for running the project
+
+HTTPS Certificate 
+
+Please run the following command to generate the https certificate
+
+```
+ dotnet dev-certs https -ep C:\Users\junho\AppData\Roaming\ASP.NET\https/certificate.pfx -p credential --trust
+```
+
+You can generate the certificate anywhere you like and with any name or password ("credential" by default in this case) but mind that you have to change it in volumes configuration in the `docker-compose.yml` for changing the path and in the `appsettings.json` for changing the password
