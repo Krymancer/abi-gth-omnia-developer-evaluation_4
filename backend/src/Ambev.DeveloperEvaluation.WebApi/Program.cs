@@ -31,8 +31,7 @@ public class Program
 
             builder.Services.AddDbContext<DefaultContext>(options =>
                 options.UseNpgsql(
-                    builder.Configuration.GetConnectionString("DefaultConnection"),
-                    b => b.MigrationsAssembly("Ambev.DeveloperEvaluation.ORM")
+                    builder.Configuration.GetConnectionString("DefaultConnection")                    
                 )
             );
 
@@ -53,7 +52,16 @@ public class Program
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
             var app = builder.Build();
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<DefaultContext>();
+                db.Database.Migrate();
+            }
+
             app.UseMiddleware<ValidationExceptionMiddleware>();
+            app.UseMiddleware<DomainExceptionMiddleware>();
 
             if (app.Environment.IsDevelopment())
             {
