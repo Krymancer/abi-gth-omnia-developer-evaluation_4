@@ -3,6 +3,7 @@ using FluentValidation;
 using MediatR;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Infrastructure.Messaging;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 {
@@ -11,10 +12,13 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
         private readonly ISaleRepository _saleRepository;
         private readonly IMapper _mapper;
 
-        public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper)
+        private readonly EventPublisher _eventPublisher;
+
+        public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, EventPublisher eventPublisher)
         {
             _saleRepository = saleRepository;
             _mapper = mapper;
+            _eventPublisher = eventPublisher;
         }
 
         public async Task<Guid> Handle(CreateSaleCommand request, CancellationToken cancellationToken)
@@ -28,6 +32,8 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
 
             // save
             await _saleRepository.CreateAsync(sale, cancellationToken);
+
+            await _eventPublisher.PublishEvent(sale, "SaleCreated", cancellationToken);
 
             // return Sale ID
             return sale.Id;

@@ -37,7 +37,7 @@ public class Program
 
             builder.Services.AddJwtAuthentication(builder.Configuration);
 
-            builder.RegisterDependencies();
+            builder.RegisterDependencies(builder.Configuration);
 
             builder.Services.AddAutoMapper(typeof(Program).Assembly, typeof(ApplicationLayer).Assembly);
 
