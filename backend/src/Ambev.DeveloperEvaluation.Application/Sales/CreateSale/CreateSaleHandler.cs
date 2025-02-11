@@ -11,7 +11,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CreateSale
     {
         private readonly ISaleRepository _saleRepository;
         private readonly IMapper _mapper;
-
         private readonly EventPublisher _eventPublisher;
 
         public CreateSaleHandler(ISaleRepository saleRepository, IMapper mapper, EventPublisher eventPublisher)

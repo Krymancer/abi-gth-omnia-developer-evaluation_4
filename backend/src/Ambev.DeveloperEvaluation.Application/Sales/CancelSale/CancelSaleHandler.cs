@@ -1,5 +1,6 @@
 using MediatR;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
+using Ambev.DeveloperEvaluation.Infrastructure.Messaging;
 
 namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale
 {
@@ -7,9 +8,12 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale
     {
         private readonly ISaleRepository _saleRepository;
 
-        public CancelSaleHandler(ISaleRepository saleRepository)
+        private readonly EventPublisher _eventPublisher;
+
+        public CancelSaleHandler(ISaleRepository saleRepository, EventPublisher eventPublisher)
         {
             _saleRepository = saleRepository;
+            _eventPublisher = eventPublisher;
         }
 
         public async Task Handle(CancelSaleCommand request, CancellationToken cancellationToken)
@@ -22,6 +26,8 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.CancelSale
                throw new DomainException("Sale already canceled.");
 
             sale.Cancel();
+
+            await _eventPublisher.PublishEvent(sale, "SaleCancelled", cancellationToken);
 
             await _saleRepository.UpdateAsync(sale, cancellationToken);
         }
