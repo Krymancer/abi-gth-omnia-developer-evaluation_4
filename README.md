@@ -1,100 +1,99 @@
 # Developer Evaluation Project
 
-## Instructions for running the project
+## Project Overview
 
-HTTPS Certificate 
+This project is built using Domain-Driven Design (DDD) principles, with a focus on cleanly separating the domain logic from infrastructure concerns. We employed the CQRS Mediator pattern to manage command and query responsibilities effectively, ensuring that the codebase remains maintainable and scalable.
 
-Please run the following command to generate the https certificate
+In order to handle cross-domain references efficiently, the External Identities pattern has been implemented. This approach uses denormalization of entity descriptions, which simplifies the process of integrating and referencing entities from other domains.
 
-```
- dotnet dev-certs https -ep C:\Users\junho\AppData\Roaming\ASP.NET\https/certificate.pfx -p credential --trust
-```
+For asynchronous communication and event-driven workflows, RabbitMQ has been utilized to implement events publishing. Key business events—such as SaleCreated, SaleModified, SaleCancelled, and ItemCancelled—are published to RabbitMQ, ensuring that our services remain decoupled and can react to changes in the system in real time.
 
-You can generate the certificate anywhere you like and with any name or password ("credential" by default in this case) but mind that you have to change it in volumes configuration in the `docker-compose.yml` for changing the path and in the `appsettings.json` for changing the password
-
---- 
-
-`READ CAREFULLY`
-
-## Instructions
-**The test below will have up to 7 calendar days to be delivered from the date of receipt of this manual.**
-
-- The code must be versioned in a public Github repository and a link must be sent for evaluation once completed
-- Upload this template to your repository and start working from it
-- Read the instructions carefully and make sure all requirements are being addressed
-- The repository must provide instructions on how to configure, execute and test the project
-- Documentation and overall organization will also be taken into consideration
-
-## Use Case
-**You are a developer on the DeveloperStore team. Now we need to implement the API prototypes.**
-
-As we work with `DDD`, to reference entities from other domains, we use the `External Identities` pattern with denormalization of entity descriptions.
-
-Therefore, you will write an API (complete CRUD) that handles sales records. The API needs to be able to inform:
-
-* Sale number
-* Date when the sale was made
-* Customer
-* Total sale amount
-* Branch where the sale was made
-* Products
-* Quantities
-* Unit prices
-* Discounts
-* Total amount for each item
-* Cancelled/Not Cancelled
-
-It's not mandatory, but it would be a differential to build code for publishing events of:
-* SaleCreated
-* SaleModified
-* SaleCancelled
-* ItemCancelled
-
-If you write the code, **it's not required** to actually publish to any Message Broker. You can log a message in the application log or however you find most convenient.
-
-### Business Rules
-
-* Purchases above 4 identical items have a 10% discount
-* Purchases between 10 and 20 identical items have a 20% discount
-* It's not possible to sell above 20 identical items
-* Purchases below 4 items cannot have a discount
-
-These business rules define quantity-based discounting tiers and limitations:
-
-1. Discount Tiers:
-   - 4+ items: 10% discount
-   - 10-20 items: 20% discount
-
-2. Restrictions:
-   - Maximum limit: 20 items per product
-   - No discounts allowed for quantities below 4 items
-
-## Overview
-This section provides a high-level overview of the project and the various skills and competencies it aims to assess for developer candidates. 
-
-See [Overview](/.doc/overview.md)
+The project leverages the full tech stack provided, integrating established tools and frameworks to ensure robust development, thorough testing, and streamlined deployment processes.
 
 ## Tech Stack
-This section lists the key technologies used in the project, including the backend, testing, frontend, and database components. 
 
-See [Tech Stack](/.doc/tech-stack.md)
+Backend:
+- **.NET 8.0**: A free, cross-platform, open source developer platform for building many different types of applications.
+  - Git: https://github.com/dotnet/core
+- **C#**: A modern object-oriented programming language developed by Microsoft.
+  - Git: https://github.com/dotnet/csharplang
 
-## Frameworks
-This section outlines the frameworks and libraries that are leveraged in the project to enhance development productivity and maintainability. 
+Testing:
+- **xUnit**: A free, open source, community-focused unit testing tool for the .NET Framework.
+  - Git: https://github.com/xunit/xunit
 
-See [Frameworks](/.doc/frameworks.md)
+Frontend:
+- **Angular**: A platform for building mobile and desktop web applications.
+  - Git: https://github.com/angular/angular
 
-<!-- 
-## API Structure
-This section includes links to the detailed documentation for the different API resources:
-- [API General](./docs/general-api.md)
-- [Products API](/.doc/products-api.md)
-- [Carts API](/.doc/carts-api.md)
-- [Users API](/.doc/users-api.md)
-- [Auth API](/.doc/auth-api.md)
--->
+Databases:
+- **PostgreSQL**: A powerful, open source object-relational database system.
+  - Git: https://github.com/postgres/postgres
+- **MongoDB**: A general purpose, document-based, distributed database.
+  - Git: https://github.com/mongodb/mongo
 
-## Project Structure
-This section describes the overall structure and organization of the project files and directories. 
+Message Brokers
+- **RabbitMQ**: A powerfull message broker
+   - Git: https://github.com/rabbitmq/rabbitmq-server
 
-See [Project Structure](/.doc/project-structure.md)
+## Run the application
+
+### HTTPS Certificate Generation (Mandatory)
+Generate the HTTPS certificate by running the following command:
+
+```bash
+dotnet dev-certs https -ep "C:\Users\junho\AppData\Roaming\ASP.NET\https\certificate.pfx" -p credential --trust
+```
+
+> Note: You can generate the certificate in any location and choose any filename or password. If you change the path or password, update the corresponding settings in:
+> - docker-compose.yml (volumes configuration)
+>
+> - appsettings.json (certificate password)
+
+### Running the Project
+
+Build Containers:
+
+```bash
+docker compose build
+```
+
+Run Containers:
+
+```bash
+docker compose up --build
+```
+
+## API Overview
+This API provides full CRUD functionality for sales records. It supports:
+
+Sales Details:
+
+Sale number
+Sale date
+Customer information
+Total sale amount
+Branch information
+Product Details:
+
+List of products with quantities, unit prices, discounts, and total per item
+Cancellation Status:
+Mark sales or individual items as cancelled.
+
+## Business Rules
+Discounts:
+
+4 or more identical items: 10% discount
+10 to 20 identical items: 20% discount
+Fewer than 4 items: No discount
+Limitations:
+
+A maximum of 20 identical items can be sold
+Optional Event Logging
+Event logging is implemented for:
+
+SaleCreated
+SaleModified
+SaleCancelled
+ItemCancelled
+These events are logged in the application log and send to RabbitMQ queues.
