@@ -78,12 +78,12 @@ Run Containers:
 docker compose up --build
 ```
 
-With frontend (WIP)
+<!-- With frontend (WIP)
 
 In root of project run
 ```bash
 docker compose -f ./backend/docker-compose.yml -f ./frontend/docker-compose.yml -p ambev_developer_evaluation up
-```
+``` -->
 
 ## API Overview
 This API provides full CRUD functionality for sales records. It supports:
