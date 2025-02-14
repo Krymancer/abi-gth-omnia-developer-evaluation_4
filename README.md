@@ -41,6 +41,7 @@ Message Brokers
 ### HTTPS Certificate Generation (Mandatory)
 Generate the HTTPS certificate by running the following command:
 
+**MAKE SURE TO CHANGE THE VOLUMES IN `docker-compose.yml`OTHERWISE API WILL NOT RUN**
 
 Windows:
 ```bash
