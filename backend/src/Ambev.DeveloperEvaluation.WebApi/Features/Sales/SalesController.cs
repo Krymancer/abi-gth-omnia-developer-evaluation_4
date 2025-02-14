@@ -12,9 +12,11 @@ using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.GetSales;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.UpdateSale;
 using Ambev.DeveloperEvaluation.WebApi.Features.Sales.CancelSale;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Ambev.DeveloperEvaluation.WebApi.Features.Sales
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SalesController : BaseController

@@ -41,9 +41,16 @@ Message Brokers
 ### HTTPS Certificate Generation (Mandatory)
 Generate the HTTPS certificate by running the following command:
 
+
+Windows:
 ```bash
-dotnet dev-certs https -ep "C:\Users\junho\AppData\Roaming\ASP.NET\https\certificate.pfx" -p credential --trust
+dotnet dev-certs https -ep "C:\Users\USER\AppData\Roaming\ASP.NET\https\certificate.pfx" -p credential --trust
 ```
+
+Mac:
+```bash
+ dotnet dev-certs https -ep "/Users/USER/.aspnet/dev-certs/https/certificate.pfx" -p credential --trust
+ ```
 
 > Note: You can generate the certificate in any location and choose any filename or password. If you change the path or password, update the corresponding settings in:
 > - docker-compose.yml (volumes configuration)
@@ -51,6 +58,12 @@ dotnet dev-certs https -ep "C:\Users\junho\AppData\Roaming\ASP.NET\https\certifi
 > - appsettings.json (certificate password)
 
 ### Running the Project
+
+Olny backend:
+
+```bash
+cd backend
+```
 
 Build Containers:
 
@@ -62,6 +75,13 @@ Run Containers:
 
 ```bash
 docker compose up --build
+```
+
+With frontend (WIP)
+
+In root of project run
+```bash
+docker compose -f ./backend/docker-compose.yml -f ./frontend/docker-compose.yml -p ambev_developer_evaluation up
 ```
 
 ## API Overview
